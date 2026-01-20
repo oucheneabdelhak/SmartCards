@@ -1,16 +1,18 @@
 DESFire EV1 Python Library
 
-A comprehensive Python library for interfacing with MIFARE DESFire EV1 smart cards using PC/SC readers. This library provides a complete implementation for card management, application creation, file handling, and all four DESFire EV1 file types.
+A comprehensive Python library for interfacing with MIFARE DESFire EV1 smart cards using PC/SC readers.
 Features
-Core Functionality
+Card Operations
 
-    Card Communication: PC/SC reader integration with automatic ATR detection
+    Initialize connection to DESFire EV1 cards
 
-    Authentication: DES CBC mode authentication at both PICC and application levels
+    Get card version information
 
-    Transaction Management: Commit/abort transactions with data integrity
+    Authenticate using DES CBC mode
 
-    Card Formatting: Full card format capability (use with caution!)
+    Format card (use with caution!)
+
+    Transaction management (commit/abort)
 
 Application Management
 
@@ -22,23 +24,15 @@ Application Management
 
 File System Support
 
-All four DESFire EV1 file types are supported:
+All four DESFire EV1 file types:
 
-    Standard Data Files: General-purpose read/write storage
+    Standard Data Files - General read/write storage
 
-    Value Files: Integer storage with credit/debit operations and limits
+    Value Files - Integer storage with credit/debit operations
 
-    Linear Record Files: Fixed-size sequential records (no overwrite)
+    Linear Record Files - Fixed-size sequential records
 
-    Cyclic Record Files: Fixed-size records that overwrite oldest when full
-
-File Structure
-text
-
-DESFireEV1/
-├── DesFireEV1.py          # Main library with all DESFire EV1 functionality
-├── example_workflow.py    # Complete demonstration of all features
-└── README.md              # This documentation
+    Cyclic Record Files - Fixed-size overwriting records
 
 Installation
 Prerequisites
@@ -47,7 +41,7 @@ Prerequisites
 
     Python 3.6+
 
-    MIFARE DESFire EV1 card (2K recommended for testing)
+    MIFARE DESFire EV1 card
 
 Required Packages
 bash
@@ -63,269 +57,191 @@ from DesFireEV1 import DesfireCard, ApplicationManager, FileManager
 # Connect to card
 card = DesfireCard(reader_index=0)
 
-# Authenticate with default key (all zeros)
+# Authenticate with default key
 default_key = bytes([0x00] * 8)
 card.authenticate([0x00], default_key)
 
-# Create application manager
+# Create application
 app_mgr = ApplicationManager(card)
 app_mgr.create_application([0x00, 0x00, 0x01])
 
 # Select application
 card.select_application([0x00, 0x00, 0x01])
 
-# Create file manager
-file_mgr = FileManager(card)
-
 # Create and use a standard file
+file_mgr = FileManager(card)
 file_mgr.create_standard_file(0x01, file_size=32)
 file_mgr.write_data(0x01, 0, b"Hello DESFire!")
 data = file_mgr.read_data(0x01, 0, 14)
 
-Running the Complete Example
+Run Complete Example
 bash
 
 python example_workflow.py
 
-The example workflow demonstrates:
+File Structure
+text
 
-    Card initialization and version reading
-
-    PICC and application level authentication
-
-    Creation of all four file types
-
-    Read/write operations for each file type
-
-    Credit/debit operations for value files
-
-    Record management for linear/cyclic files
-
-    Cleanup options (delete files, applications, or format card)
+DESFireEV1/
+├── DesFireEV1.py          # Main library with all functionality
+├── example_workflow.py    # Complete demonstration
+└── README.md              # This file
 
 API Reference
 DesfireCard Class
 
-    __init__(reader_index=0): Initialize connection to card reader
+    __init__(reader_index=0) - Connect to card
 
-    get_version(): Get card version information (3 frames)
+    get_version() - Get card version
 
-    select_application(aid): Select application by 3-byte AID
+    select_application(aid) - Select application
 
-    authenticate(key_number, key_value): Authenticate with DES key
+    authenticate(key_number, key_value) - Authenticate with key
 
-    format_card(): Format entire card (deletes everything)
+    format_card() - Format entire card
 
-    commit_transaction(): Validate pending writes
+    commit_transaction() - Commit writes
 
-    abort_transaction(): Cancel pending writes
+    abort_transaction() - Abort writes
 
 ApplicationManager Class
 
-    list_applications(): List all application IDs
+    list_applications() - List all apps
 
-    create_application(aid, key_settings, num_keys): Create new application
+    create_application(aid, key_settings, num_keys) - Create app
 
-    delete_application(aid): Delete application
-
-    change_key_settings(new_settings): Change PICC key settings
+    delete_application(aid) - Delete app
 
 FileManager Class
 
-    list_files(): List all file IDs in current application
+    list_files() - List files in app
 
-    get_file_type(file_id): Detect file type
+    get_file_type(file_id) - Detect file type
 
-    delete_file(file_id): Delete file
+    delete_file(file_id) - Delete file
 
-Standard File Operations
+Standard Files
 
-    create_standard_file(file_id, file_size, comm_settings, access_rights)
+    create_standard_file() - Create standard file
 
-    write_data(file_id, offset, data)
+    write_data() - Write to file
 
-    read_data(file_id, offset, length)
+    read_data() - Read from file
 
-Value File Operations
+Value Files
 
-    create_value_file(file_id, lower_limit, upper_limit, initial_value, limited_credit, comm_settings, access_rights)
+    create_value_file() - Create value file
 
-    credit_value(file_id, amount): Add value
+    credit_value() - Add value
 
-    debit_value(file_id, amount): Subtract value
+    debit_value() - Subtract value
 
-    get_value(file_id): Read current value
+    get_value() - Read value
 
-Record File Operations
+Record Files
 
-    create_linear_record_file(file_id, record_size, max_records, comm_settings, access_rights)
+    create_linear_record_file() - Create linear record file
 
-    create_cyclic_record_file(file_id, record_size, max_records, comm_settings, access_rights)
+    create_cyclic_record_file() - Create cyclic record file
 
-    write_record(file_id, offset, data)
+    write_record() - Write record
 
-    read_records(file_id, record_offset, num_records)
+    read_records() - Read records
 
-    clear_record_file(file_id): Clear all records
+    clear_record_file() - Clear records
 
-File Types Explained
-1. Standard Data Files
+Example Workflow
 
-    Purpose: General data storage
+The example_workflow.py demonstrates:
 
-    Features: Random read/write access
+    Card initialization - Connect and read version
 
-    Size: Configurable (up to card capacity)
+    Authentication - PICC and application level
 
-    Use Case: Storing configuration, user data, or any binary data
+    Application creation - Create test application
 
-2. Value Files
+    File creation - All four file types
 
-    Purpose: Integer value storage with arithmetic operations
+    Operations - Read/write for each file type
 
-    Features: Credit/debit operations with limits, transaction support
+    Cleanup - Delete files or format card
 
-    Size: Fixed 4 bytes (32-bit integer)
+Troubleshooting
+Common Issues
 
-    Use Case: E-purse, loyalty points, token systems
+No card readers found:
 
-3. Linear Record Files
+    Ensure PC/SC service is running
 
-    Purpose: Fixed-size record storage
+    Check reader connection
 
-    Features: Sequential writes, stops when full
+    Run with admin privileges if needed
 
-    Behavior: Never overwrites existing records
+Authentication failed:
 
-    Use Case: Audit trails, logging, sequential data
+    Verify card uses DES authentication
 
-4. Cyclic Record Files
+    Check key value (default: 8 bytes of 0x00)
 
-    Purpose: Fixed-size record storage with overwrite
+    Ensure card is not locked
 
-    Features: Always accepts writes, overwrites oldest when full
+File creation errors:
 
-    Behavior: Maintains N most recent records
+    Check available memory
 
-    Use Case: Recent transaction history, sensor data, rolling logs
+    Verify authentication
+
+    Ensure file ID is unique (0x00 to 0x1F)
+
+Status Codes
+
+    0x9100 - Success
+
+    0x9101 - Permission denied
+
+    0x9103 - Key not found
+
+    0x910C - Insufficient memory
+
+    0x91AE - Authentication error
 
 Security Notes
 
 ⚠️ Important Security Considerations:
 
-    Default Keys: The library uses default DES keys (all zeros) for demonstration. In production, always use unique, secure keys.
+    Default Keys - Library uses default keys for demonstration. In production, use unique secure keys.
 
-    Authentication: DESFire EV1 supports multiple authentication modes. This library implements DES CBC mode. For higher security, consider AES authentication.
+    Authentication - This implements DES CBC mode. For higher security, consider AES.
 
-    Key Management: Store keys securely. Never hardcode production keys in source code.
+    Key Management - Store keys securely. Never hardcode in source code.
 
-    Card Formatting: format_card() erases ALL data including keys. Use with extreme caution.
+    Formatting - format_card() erases ALL data including keys. Use with caution.
 
-    Transaction Integrity: Always use commit_transaction() after multiple writes to ensure data integrity.
-
-Troubleshooting
-Common Issues
-
-    "No card readers found"
-
-        Ensure PC/SC service is running
-
-        Check reader is properly connected
-
-        Run with administrator privileges if needed
-
-    Authentication failures
-
-        Verify card uses DES authentication (not AES)
-
-        Check key value (default is 8 bytes of 0x00)
-
-        Ensure card is not locked or disabled
-
-    File creation errors
-
-        Check available memory on card
-
-        Verify authentication level
-
-        Ensure file ID is unique (0x00 to 0x1F)
-
-    APDU errors
-
-        Check SW1/SW2 status codes against DESFire EV1 manual
-
-        Ensure proper sequence of operations
-
-Status Code Reference
-
-    0x9100: Success
-
-    0x9101: Permission denied
-
-    0x9103: Key not found
-
-    0x910C: Insufficient memory
-
-    0x910E: Invalid parameter
-
-    0x911C: Command not supported
-
-    0x91AE: Authentication error
+    Transactions - Use commit_transaction() after writes for data integrity.
 
 Use Cases
-Potential Applications
 
-    Access Control: Store user credentials and permissions
+    Access Control Systems - User credentials and permissions
 
-    Loyalty Programs: Value files for points tracking
+    Loyalty Programs - Points tracking with value files
 
-    Data Logging: Record files for audit trails
+    Data Logging - Audit trails with record files
 
-    IoT Devices: Configuration storage and data collection
+    IoT Devices - Configuration storage
 
-    Ticketing Systems: Limited-use tokens or passes
-
-Industry Applications
-
-    Public transportation
-
-    Building access systems
-
-    Payment systems
-
-    Inventory management
-
-    Healthcare records
-
-Contributing
-
-Contributions are welcome! Please:
-
-    Fork the repository
-
-    Create a feature branch
-
-    Add tests for new functionality
-
-    Submit a pull request
+    Ticketing Systems - Limited-use tokens
 
 License
 
-This project is provided for educational and development purposes. Check LICENSE file for details.
-Support
+© 2024 [Your Name]
 
-For issues, questions, or feature requests:
+This software is provided for educational and research purposes only.
 
-    Check the troubleshooting section
+Educational Use: Freely available with attribution.
 
-    Review DESFire EV1 documentation
+Commercial Use: Requires prior written consent. Please contact [your-email@example.com] for commercial licensing.
 
-    Submit a GitHub issue
-
+See LICENSE file for details.
 Disclaimer
 
-This software is provided as-is. The authors are not responsible for any data loss, security breaches, or damages resulting from the use of this code. Always test thoroughly in a development environment before deploying to production.
-
-Happy coding with DESFire EV1! 🚀
-
-Note: MIFARE DESFire is a registered trademark of NXP Semiconductors.
+This software is provided as-is. The author is not responsible for any data loss, security breaches, or damages resulting from its use. Always test thoroughly in development before production.
