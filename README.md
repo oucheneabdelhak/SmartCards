@@ -233,13 +233,13 @@ Use Cases
 
 License
 
-© 2024 [Your Name]
+© 2026 OUCHENE Abdelhak
 
 This software is provided for educational and research purposes only.
 
 Educational Use: Freely available with attribution.
 
-Commercial Use: Requires prior written consent. Please contact [your-email@example.com] for commercial licensing.
+Commercial Use: Requires prior written consent. Please contact [oucheneabdelhak@outlook.com] for commercial licensing.
 
 See LICENSE file for details.
 Disclaimer
