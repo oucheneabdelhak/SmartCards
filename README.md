@@ -44,48 +44,43 @@ Prerequisites
     MIFARE DESFire EV1 card
 
 Required Packages
-bash
 
-pip install pyscard pycryptodome
+    pip install pyscard pycryptodome
 
 Quick Start
 Basic Usage
-python
 
-from DesFireEV1 import DesfireCard, ApplicationManager, FileManager
-
-# Connect to card
-card = DesfireCard(reader_index=0)
-
-# Authenticate with default key
-default_key = bytes([0x00] * 8)
-card.authenticate([0x00], default_key)
-
-# Create application
-app_mgr = ApplicationManager(card)
-app_mgr.create_application([0x00, 0x00, 0x01])
-
-# Select application
-card.select_application([0x00, 0x00, 0x01])
-
-# Create and use a standard file
-file_mgr = FileManager(card)
-file_mgr.create_standard_file(0x01, file_size=32)
-file_mgr.write_data(0x01, 0, b"Hello DESFire!")
-data = file_mgr.read_data(0x01, 0, 14)
-
+    from DesFireEV1 import DesfireCard, ApplicationManager, FileManager
+    
+    # Connect to card
+    card = DesfireCard(reader_index=0)
+    
+    # Authenticate with default key
+    default_key = bytes([0x00] * 8)
+    card.authenticate([0x00], default_key)
+    
+    # Create application
+    app_mgr = ApplicationManager(card)
+    app_mgr.create_application([0x00, 0x00, 0x01])
+    
+    # Select application
+    card.select_application([0x00, 0x00, 0x01])
+    
+    # Create and use a standard file
+    file_mgr = FileManager(card)
+    file_mgr.create_standard_file(0x01, file_size=32)
+    file_mgr.write_data(0x01, 0, b"Hello DESFire!")
+    data = file_mgr.read_data(0x01, 0, 14)
+    
 Run Complete Example
-bash
 
-python example_workflow.py
-
+    python example_workflow.py
 File Structure
-text
 
-DESFireEV1/
-├── DesFireEV1.py          # Main library with all functionality
-├── example_workflow.py    # Complete demonstration
-└── README.md              # This file
+    DESFireEV1/
+    ├── DesFireEV1.py          # Main library with all functionality
+    ├── example_workflow.py    # Complete demonstration
+    └── README.md              # This file
 
 API Reference
 DesfireCard Class
