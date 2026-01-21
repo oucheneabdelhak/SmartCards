@@ -225,18 +225,3 @@ Use Cases
     IoT Devices - Configuration storage
 
     Ticketing Systems - Limited-use tokens
-
-License
-
-© 2026 OUCHENE Abdelhak
-
-This software is provided for educational and research purposes only.
-
-Educational Use: Freely available with attribution.
-
-Commercial Use: Requires prior written consent. Please contact [oucheneabdelhak@outlook.com] for commercial licensing.
-
-See LICENSE file for details.
-Disclaimer
-
-This software is provided as-is. The author is not responsible for any data loss, security breaches, or damages resulting from its use. Always test thoroughly in development before production.
